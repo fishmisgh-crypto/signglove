@@ -1,0 +1,22 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Flutter / Dart
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# OS
+desktop.ini
+.DS_Store
+
+# ML artifacts
+ML/data/*
+!ML/data/.gitkeep
+ML/landmarks/*
+!ML/landmarks/.gitkeep
+App/assets/models/*.tflite
