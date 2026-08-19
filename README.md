@@ -1,1 +1,1 @@
-# ESLT:ET
+# ESLT: Ethiopian Sign Language Translator
