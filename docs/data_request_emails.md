@@ -1,0 +1,164 @@
+# Data request drafts
+
+Ready to send. **Send these yourself** — they should come from your own address
+and carry your real name and institution, and a request for research data has to
+be made by the person who will be bound by its terms.
+
+Fill in `[...]` before sending. Keep them short: researchers answer short emails.
+
+Track replies in the table at the bottom.
+
+---
+
+## 1. EthSL isolated-word skeletal data — highest value
+
+**To:** Dagne Walle Girmaw (corresponding author), Department of Information
+Technology, Haramaya University — email is on the paper's author page.
+**Cc:** Million Meshesha (Addis Ababa University), Deme Kuma Gonfa.
+
+Paper: *A deep learning framework for Ethiopian sign language recognition using
+skeleton-based representation*, Scientific Reports 15:36181 (2025),
+DOI 10.1038/s41598-025-19937-0.
+
+Why this one first: they hold **20 isolated words, 5,600 clips, 7 signers**,
+already extracted as MediaPipe Holistic landmarks — the exact representation our
+pipeline produces. The paper explicitly offers it.
+
+> **Subject:** Request for anonymised skeletal data — EthSL recognition (Sci Rep 15:36181)
+>
+> Dear Dr Girmaw,
+>
+> I am [name], a [year] student at [institution], working on a student project
+> building an Ethiopian Sign Language to text and speech application for isolated
+> word recognition.
+>
+> I read your Scientific Reports paper on skeleton-based EthSL recognition with
+> great interest, particularly the signer-invariant evaluation. The paper notes
+> that anonymised skeletal representations derived from MediaPipe Holistic can be
+> shared on request for reproducibility. I would like to request access to that
+> data for the 20 isolated words.
+>
+> Our pipeline extracts MediaPipe Holistic landmarks in the same way, so your
+> representation would be directly usable and would let us compare against your
+> reported results rather than starting from nothing.
+>
+> To be clear about intent: this is an unfunded student project. We would cite
+> the paper in any writeup, would not redistribute the data, and are happy to
+> agree to any conditions you set on its use. We can also share our results back
+> with you.
+>
+> Thank you for considering this, and for making the work available.
+>
+> [name]
+> [institution], [email]
+
+---
+
+## 2. CESL continuous corpus
+
+**To:** Anteneh Yehalem — `artificialintel02@gmail.com`
+Record: <https://zenodo.org/records/10800699> (files restricted)
+
+1,320 videos, 22 signers, 92.7 GB. Continuous sentences, not isolated words — it
+will not drop into an isolated-word pipeline unchanged, but 22 signers of real
+EthSL is worth having and the request costs nothing.
+
+> **Subject:** Access request — Continuous Ethiopian Sign Language (CESL) dataset
+>
+> Dear Mr Yehalem,
+>
+> I am [name], a [year] student at [institution]. We are building an Ethiopian
+> Sign Language recognition application as a student project.
+>
+> I found the CESL dataset on Zenodo (DOI 10.5281/zenodo.10800699) and would like
+> to request access to the files, which are currently restricted. Our work is on
+> isolated word recognition rather than continuous signing, so we would primarily
+> use the corpus for its signer diversity and as a reference for how signs are
+> produced in context.
+>
+> This is an unfunded student project. We would cite the dataset, would not
+> redistribute it, and will follow any conditions you place on its use.
+>
+> If a smaller subset is easier to share than the full 92.7 GB, that would be very
+> welcome — our connection is slow.
+>
+> Thank you for creating and publishing this resource.
+>
+> [name]
+> [institution], [email]
+
+---
+
+## 3. Derived Amharic alphabet dataset
+
+**To:** corresponding author, Heliyon (2024), DOI 10.1016/j.heliyon.2024.e38265
+
+2,430 samples, 15 signers, 7 derived alphabet signs. Alphabet rather than words,
+so lower priority — but it is fingerspelling data you cannot get elsewhere, and
+the paper says it is available on request.
+
+> **Subject:** Data request — derived Amharic alphabet sign language dataset
+>
+> Dear Dr [surname],
+>
+> I am [name], a [year] student at [institution], working on an Ethiopian Sign
+> Language recognition project.
+>
+> Your Heliyon paper on derived Amharic alphabet sign recognition notes that the
+> dataset is available from the corresponding author on reasonable request. I
+> would like to request a copy for use in a student project on EthSL recognition.
+>
+> We would cite the paper, would not redistribute the data, and are happy to
+> accept any conditions on its use.
+>
+> Thank you for your time.
+>
+> [name]
+> [institution], [email]
+
+---
+
+## 4. AAU EthSL & Deaf Culture Study Unit
+
+**To:** Addis Ababa University EthSL unit — contact via <https://ethsl.aau.edu.et/>
+
+Two purposes: their digital dictionary server (`ethsld.aau.edu.et`) has been
+returning HTTP 502, and they are the authority who can confirm our gloss list is
+correct EthSL. Note Million Meshesha (AAU) is also a co-author on request 1.
+
+> **Subject:** EthSL digital dictionary unavailable — and a question on sign verification
+>
+> Dear EthSL Study Unit,
+>
+> I am [name], a [year] student at [institution], working on an Ethiopian Sign
+> Language recognition project.
+>
+> Two things. First, the digital dictionary at ethsld.aau.edu.et/dictionary/ has
+> been returning a server error (HTTP 502) whenever we have tried it. I wanted to
+> flag it in case you were not aware.
+>
+> Second, we are assembling a 30-word vocabulary for a recognition prototype and
+> want to be certain we are recording correct EthSL rather than approximations.
+> Is there someone in the unit who could review our word list, or could you point
+> us to an authoritative reference while the dictionary is down?
+>
+> We would be glad to share what we build.
+>
+> Thank you,
+>
+> [name]
+> [institution], [email]
+
+---
+
+## Tracking
+
+| # | Target | Sent | Reply | Outcome |
+|---|---|---|---|---|
+| 1 | Girmaw et al. — 5,600 clips, 7 signers, landmarks | | | |
+| 2 | Yehalem — CESL, 22 signers | | | |
+| 3 | Heliyon — 2,430 alphabet samples | | | |
+| 4 | AAU EthSL unit — dictionary + verification | | | |
+
+Send all four the same day. They cost about twenty minutes together and run in
+parallel; recording proceeds regardless of how they land.
