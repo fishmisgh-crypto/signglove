@@ -38,13 +38,13 @@ def frame_features(results):
     """Flatten one frame to pose(33x4) + left hand(21x3) + right hand(21x3)."""
     if results.pose_landmarks:
         pose = np.array([[p.x, p.y, p.z, getattr(p, "visibility", 0.0)]
-                         for p in results.pose_landmarks[0]]).flatten()
+                         for p in results.pose_landmarks]).flatten()
     else:
         pose = np.zeros(33 * 4)
 
     def hand(landmarks):
         if landmarks:
-            return np.array([[p.x, p.y, p.z] for p in landmarks[0]]).flatten()
+            return np.array([[p.x, p.y, p.z] for p in landmarks]).flatten()
         return np.zeros(21 * 3)
 
     return np.concatenate([pose, hand(results.left_hand_landmarks),

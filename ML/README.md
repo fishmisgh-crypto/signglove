@@ -39,3 +39,19 @@ work hit 94% signer-dependent but 73% signer-invariant with 7 signers.
 Every signer must sign a consent form before recording. Store it in
 `ESLT-data/manifests/consent/`. This is face and body video of identifiable
 people — treat it accordingly and do not commit it or publish it.
+
+## Pipeline
+
+    python ML/build_dataset.py    # clips -> normalised landmarks + manifest
+    python ML/train.py            # train, leave-one-out eval, export model.json
+    python ML/app.py              # web demo at http://127.0.0.1:5000
+
+`build_dataset.py` normalises every frame to the shoulder midpoint and scales by
+shoulder width, so the model cannot key on where the signer stood or how close
+they were to the camera.
+
+Notes on MediaPipe that cost real time to find:
+- `pose_landmarks` in the Tasks API is a flat list, not one list per person.
+- VIDEO mode needs timestamps increasing across the landmarker's whole lifetime,
+  not per clip, and its segmentation node asserts when frame size changes. Use
+  IMAGE mode with a fresh landmarker per clip when sources vary in resolution.

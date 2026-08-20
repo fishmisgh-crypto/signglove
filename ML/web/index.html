@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ESLT — Ethiopian Sign Language Translator</title>
+<style>
+  :root {
+    --bg: #10131a; --panel: #171b24; --line: #262c38;
+    --text: #e8ecf4; --muted: #9aa4b8; --accent: #4a9eff;
+    --warn: #f0a030; --bad: #e5484d; --good: #30c98a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px; background: var(--bg); color: var(--text);
+    font: 15px/1.55 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sub { color: var(--muted); font-size: 13px; margin-bottom: 18px; }
+  .banner {
+    background: #3a2a12; border: 1px solid #6b4a18; color: #f5c98a;
+    padding: 12px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 18px;
+  }
+  .banner b { color: #ffd9a0; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+  .panel {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 16px;
+  }
+  video {
+    width: 100%; border-radius: 8px; background: #000; aspect-ratio: 4/3;
+    object-fit: cover; transform: scaleX(-1);
+  }
+  button {
+    font: inherit; font-weight: 600; padding: 10px 16px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--accent); color: #06121f;
+    cursor: pointer; margin-top: 12px;
+  }
+  button.secondary { background: transparent; color: var(--text); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .status { font-size: 13px; color: var(--muted); margin-top: 10px; min-height: 20px; }
+  .amh {
+    font-size: 42px; font-weight: 700; margin: 6px 0 2px; line-height: 1.25;
+    word-break: break-word;
+  }
+  .gloss { color: var(--muted); font-size: 13px; text-transform: uppercase;
+           letter-spacing: 0.06em; }
+  .alt { border-top: 1px solid var(--line); margin-top: 14px; padding-top: 12px; }
+  .row { display: flex; justify-content: space-between; gap: 10px;
+         padding: 5px 0; font-size: 14px; }
+  .bar { height: 4px; background: var(--line); border-radius: 2px; margin-top: 3px; }
+  .bar > i { display: block; height: 100%; background: var(--accent);
+             border-radius: 2px; }
+  .meta { font-size: 12px; color: var(--muted); margin-top: 14px; }
+  .err { color: var(--bad); }
+  .empty { color: var(--muted); font-size: 14px; padding: 28px 0; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>ESLT — Ethiopian Sign Language Translator</h1>
+  <div class="sub">Sign to Amharic text · prototype</div>
+
+  <div class="banner" id="banner">Loading model info…</div>
+
+  <div class="grid">
+    <div class="panel">
+      <video id="cam" autoplay muted playsinline></video>
+      <button id="rec">Record 2 seconds</button>
+      <button id="enable" class="secondary">Enable camera</button>
+      <div class="status" id="status">Camera not started.</div>
+    </div>
+
+    <div class="panel" id="out">
+      <div class="empty">Record a sign to see a prediction.</div>
+    </div>
+  </div>
+
+  <div class="meta" id="meta"></div>
+</div>
+
+<script>
+const CLIP_MS = 2000;
+let stream = null, recorder = null, info = null;
+
+const $ = id => document.getElementById(id);
+
+async function loadInfo() {
+  try {
+    info = await (await fetch('/api/info')).json();
+    const pct = v => (v * 100).toFixed(1) + '%';
+    $('banner').innerHTML =
+      `<b>Prototype trained on ${info.n_train} clips across ${info.classes} words.</b><br>` +
+      `Held-out accuracy (leave-one-out): <b>top-1 ${pct(info.loo_top1)}</b>, ` +
+      `top-3 ${pct(info.loo_top3)} — against a ${pct(1 / info.classes)} random baseline. ` +
+      `${info.single_clip_classes.length} words have only a single training clip and ` +
+      `essentially cannot be recognised. Treat every output as unreliable: this ` +
+      `demonstrates the pipeline, not a working translator.`;
+    $('meta').textContent =
+      'Words: ' + info.labels.map(g => `${g} (${info.amharic[g] || '—'})`).join(' · ');
+  } catch (e) {
+    $('banner').innerHTML = '<b>Could not load model info.</b> Is the server running?';
+  }
+}
+
+$('enable').onclick = async () => {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { width: 640, height: 480 }, audio: false });
+    $('cam').srcObject = stream;
+    $('status').textContent = 'Camera ready. Stand back so your head and hands are visible.';
+  } catch (e) {
+    $('status').innerHTML = '<span class="err">Camera blocked: ' + e.name + '</span>';
+  }
+};
+
+$('rec').onclick = () => {
+  if (!stream) { $('status').innerHTML = '<span class="err">Enable the camera first.</span>'; return; }
+  const chunks = [];
+  let mime = 'video/webm;codecs=vp8';
+  if (!MediaRecorder.isTypeSupported(mime)) mime = 'video/webm';
+  recorder = new MediaRecorder(stream, { mimeType: mime });
+  recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+  recorder.onstop = () => upload(new Blob(chunks, { type: mime }));
+  recorder.start();
+
+  $('rec').disabled = true;
+  let left = CLIP_MS / 1000;
+  $('status').textContent = 'Recording… ' + left;
+  const t = setInterval(() => {
+    left -= 1;
+    $('status').textContent = left > 0 ? 'Recording… ' + left : 'Processing…';
+    if (left <= 0) clearInterval(t);
+  }, 1000);
+  setTimeout(() => recorder.stop(), CLIP_MS);
+};
+
+async function upload(blob) {
+  const fd = new FormData();
+  fd.append('clip', blob, 'clip.webm');
+  try {
+    const r = await fetch('/api/predict', { method: 'POST', body: fd });
+    const d = await r.json();
+    render(d);
+  } catch (e) {
+    $('status').innerHTML = '<span class="err">Request failed: ' + e.message + '</span>';
+  } finally {
+    $('rec').disabled = false;
+  }
+}
+
+function speak(text) {
+  if (!window.speechSynthesis) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'am-ET';
+  speechSynthesis.speak(u);   // silently ignored if no Amharic voice is installed
+}
+
+function render(d) {
+  const out = $('out');
+  if (d.error) {
+    out.innerHTML = '<div class="empty err">' + d.error + '</div>';
+    $('status').textContent = '';
+    return;
+  }
+  const top = d.predictions[0];
+  const rest = d.predictions.slice(1);
+  out.innerHTML =
+    '<div class="gloss">' + top.gloss + '</div>' +
+    '<div class="amh">' + top.amharic + '</div>' +
+    '<div class="status">confidence ' + (top.confidence * 100).toFixed(1) + '%</div>' +
+    '<div class="alt">' + rest.map(p =>
+      '<div><div class="row"><span>' + p.amharic + ' <span class="gloss">' +
+      p.gloss + '</span></span><span>' + (p.confidence * 100).toFixed(1) +
+      '%</span></div><div class="bar"><i style="width:' +
+      (p.confidence * 100).toFixed(1) + '%"></i></div></div>').join('') + '</div>';
+  $('status').textContent =
+    'hands visible in ' + (d.hand_coverage * 100).toFixed(0) + '% of ' + d.frames + ' frames';
+  speak(top.amharic);
+}
+
+loadInfo();
+</script>
+</body>
+</html>
