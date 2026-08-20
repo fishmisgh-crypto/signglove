@@ -49,13 +49,24 @@ def append_manifest(row):
 
 
 def open_camera(index):
+    """Open the camera and report the resolution it actually negotiated.
+
+    Cameras silently ignore a size they cannot do. Writing frames of one size
+    into a VideoWriter declared at another produces empty files, so the caller
+    must use the negotiated size, not the requested one.
+    """
     cap = cv2.VideoCapture(index, cv2.CAP_DSHOW)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, CAPTURE_WIDTH)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, CAPTURE_HEIGHT)
     cap.set(cv2.CAP_PROP_FPS, FPS)
     if not cap.isOpened():
         raise SystemExit(f"could not open camera {index}")
-    return cap
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    if (width, height) != (CAPTURE_WIDTH, CAPTURE_HEIGHT):
+        print(f"note: camera gave {width}x{height}, not the requested "
+              f"{CAPTURE_WIDTH}x{CAPTURE_HEIGHT} — recording at {width}x{height}")
+    return cap, width, height
 
 
 def overlay(frame, lines, colour=(255, 255, 255)):
@@ -67,7 +78,7 @@ def overlay(frame, lines, colour=(255, 255, 255)):
                     colour, 2, cv2.LINE_AA)
 
 
-def record_take(cap, gloss, signer_id, take_no):
+def record_take(cap, gloss, signer_id, take_no, size):
     """Record one clip. Returns the manifest row, or None if aborted."""
     out_dir = RAW_DIR / gloss / signer_id
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -87,7 +98,7 @@ def record_take(cap, gloss, signer_id, take_no):
                 return None
 
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-    writer = cv2.VideoWriter(str(path), fourcc, FPS, (CAPTURE_WIDTH, CAPTURE_HEIGHT))
+    writer = cv2.VideoWriter(str(path), fourcc, FPS, size)
     target_frames = int(CLIP_SECONDS * FPS)
     written = 0
     while written < target_frames:
@@ -118,8 +129,8 @@ def record_take(cap, gloss, signer_id, take_no):
         "recorded_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "fps": FPS,
         "frames": written,
-        "width": CAPTURE_WIDTH,
-        "height": CAPTURE_HEIGHT,
+        "width": size[0],
+        "height": size[1],
     }
 
 
@@ -144,7 +155,8 @@ def main():
             raise SystemExit(f"not in vocabulary list: {unknown}")
         vocab = [e for e in vocab if e["gloss"] in wanted]
 
-    cap = open_camera(args.camera)
+    cap, cam_w, cam_h = open_camera(args.camera)
+    size = (cam_w, cam_h)
     recorded = 0
     try:
         for entry in vocab:
@@ -153,6 +165,8 @@ def main():
             if done >= args.takes:
                 print(f"{gloss}: already has {done} takes, skipping")
                 continue
+            # Amharic cannot be drawn by cv2.putText, so show it in the console.
+            print(f"\n{gloss}  ({entry['amharic']})  — {done}/{args.takes} takes")
 
             while done < args.takes:
                 ok, frame = cap.read()
@@ -160,7 +174,7 @@ def main():
                     raise SystemExit("camera read failed")
                 frame = cv2.flip(frame, 1)
                 overlay(frame, [
-                    f"{gloss}   ({entry['amharic']})",
+                    gloss,
                     f"signer {args.signer}   {done}/{args.takes} takes",
                     "SPACE record    s skip gloss    q quit",
                 ], (0, 255, 120))
@@ -172,7 +186,7 @@ def main():
                 if key == ord("s"):
                     break
                 if key == ord(" "):
-                    row = record_take(cap, gloss, args.signer, done + 1)
+                    row = record_take(cap, gloss, args.signer, done + 1, size)
                     if row:
                         append_manifest(row)
                         recorded += 1
