@@ -1,12 +1,10 @@
 # Data request drafts
 
-Ready to send. **Send these yourself** — they should come from your own address
-and carry your real name and institution, and a request for research data has to
-be made by the person who will be bound by its terms.
+Requests 1, 2, 3 and 5 were **sent on 2026-08-20** from fishmisgh@gmail.com.
+Request 4 is still unsent — no public address exists for the AAU unit.
 
-Fill in `[...]` before sending. Keep them short: researchers answer short emails.
-
-Track replies in the table at the bottom.
+Kept here as the record of what was asked and as templates for follow-ups.
+Signature style: institution in the opening line only, not repeated at the end.
 
 ---
 
@@ -28,7 +26,7 @@ pipeline produces. The paper explicitly offers it.
 >
 > Dear Dr Girmaw,
 >
-> I am [name], a [year] student at [institution], working on a student project
+> I am Fisehatsion Misganaw, a summer camp student at the Ethiopian Artificial Intelligence Institute, working on a student project
 > building an Ethiopian Sign Language to text and speech application for isolated
 > word recognition.
 >
@@ -49,8 +47,8 @@ pipeline produces. The paper explicitly offers it.
 >
 > Thank you for considering this, and for making the work available.
 >
-> [name]
-> [institution], [email]
+> Fisehatsion Misganaw
+> fishmisgh@gmail.com
 
 ---
 
@@ -67,7 +65,7 @@ EthSL is worth having and the request costs nothing.
 >
 > Dear Mr Yehalem,
 >
-> I am [name], a [year] student at [institution]. We are building an Ethiopian
+> I am Fisehatsion Misganaw, a summer camp student at the Ethiopian Artificial Intelligence Institute. We are building an Ethiopian
 > Sign Language recognition application as a student project.
 >
 > I found the CESL dataset on Zenodo (DOI 10.5281/zenodo.10800699) and would like
@@ -84,8 +82,8 @@ EthSL is worth having and the request costs nothing.
 >
 > Thank you for creating and publishing this resource.
 >
-> [name]
-> [institution], [email]
+> Fisehatsion Misganaw
+> fishmisgh@gmail.com
 
 ---
 
@@ -99,9 +97,9 @@ the paper says it is available on request.
 
 > **Subject:** Data request — derived Amharic alphabet sign language dataset
 >
-> Dear Dr [surname],
+> Dear Dr Salau,
 >
-> I am [name], a [year] student at [institution], working on an Ethiopian Sign
+> I am Fisehatsion Misganaw, a summer camp student at the Ethiopian Artificial Intelligence Institute, working on an Ethiopian Sign
 > Language recognition project.
 >
 > Your Heliyon paper on derived Amharic alphabet sign recognition notes that the
@@ -113,8 +111,8 @@ the paper says it is available on request.
 >
 > Thank you for your time.
 >
-> [name]
-> [institution], [email]
+> Fisehatsion Misganaw
+> fishmisgh@gmail.com
 
 ---
 
@@ -130,7 +128,7 @@ correct EthSL. Note Million Meshesha (AAU) is also a co-author on request 1.
 >
 > Dear EthSL Study Unit,
 >
-> I am [name], a [year] student at [institution], working on an Ethiopian Sign
+> I am Fisehatsion Misganaw, a summer camp student at the Ethiopian Artificial Intelligence Institute, working on an Ethiopian Sign
 > Language recognition project.
 >
 > Two things. First, the digital dictionary at ethsld.aau.edu.et/dictionary/ has
@@ -146,8 +144,8 @@ correct EthSL. Note Million Meshesha (AAU) is also a co-author on request 1.
 >
 > Thank you,
 >
-> [name]
-> [institution], [email]
+> Fisehatsion Misganaw
+> fishmisgh@gmail.com
 
 ---
 
@@ -167,17 +165,19 @@ The preprocessed set sidesteps all of it, and it resolves the licensing
 question too: those clips belong to third-party dictionary sites, which is
 exactly why WLASL cannot redistribute them itself.
 
-Send this only after the form, and only if you have had no reply for a week or
-so.
+**What was actually sent** differed from the draft below: the version emailed on
+2026-08-20 was rewritten as a first contact, because claiming a form submission
+that had not happened would have been false. It asks Dr Li to point us at the
+form if one is required.
 
-> **Subject:** WLASL video request follow-up — [name], [institution]
+> **Subject:** WLASL video request follow-up — Fisehatsion Misganaw
 >
 > Dear Dr Li,
 >
-> I submitted the WLASL video request form on [date] under the name [name]
-> ([email]) and wanted to follow up briefly.
+> I submitted the WLASL video request form on [date] under the name Fisehatsion Misganaw
+> (fishmisgh@gmail.com) and wanted to follow up briefly.
 >
-> I am a [year] student at [institution] working on an isolated-word sign
+> I am a summer camp student at the Ethiopian Artificial Intelligence Institute working on an isolated-word sign
 > language recognition project. We are studying the overlap between ASL and
 > Ethiopian Sign Language, which shares some historical lexicon with ASL through
 > the deaf schools where EthSL developed, and WLASL is the reference corpus for
@@ -198,25 +198,34 @@ so.
 >
 > Thank you for maintaining WLASL and for making it available.
 >
-> [name]
-> [institution], [email]
+> Fisehatsion Misganaw
+> fishmisgh@gmail.com
 
 ---
 
 ## Tracking
 
-| # | Target | Sent | Reply | Outcome |
+| # | Target | Address | Sent | Reply |
 |---|---|---|---|---|
-| 1 | Girmaw et al. — 5,600 clips, 7 signers, landmarks | | | |
-| 2 | Yehalem — CESL, 22 signers | | | |
-| 3 | Heliyon — 2,430 alphabet samples | | | |
-| 4 | AAU EthSL unit — dictionary + verification | | | |
-| 5 | WLASL form, then Li — preprocessed ASL clips | | | |
+| 1 | Girmaw — 5,600 clips, 7 signers, landmarks | dagnewalle143@gmail.com (verified via PLOS One) | 2026-08-20 | |
+| 2 | Yehalem — CESL, 22 signers | artificialintel02@gmail.com | 2026-08-20 | |
+| 3 | Salau +2 — 2,430 alphabet samples | ayodejisalau98@gmail.com | 2026-08-20 | |
+| 4 | AAU EthSL unit — dictionary + sign verification | **none found** | not sent | |
+| 5 | Li — WLASL preprocessed clips | dongxu.li@anu.edu.au | 2026-08-20 | |
+
+A correction was sent on each of 1, 2, 3 and 5: the first round went out under an
+incorrect name.
 
 Requests 1–4 are for **EthSL** data and are what make this an Ethiopian
 translator. Request 5 is for **ASL** data, useful only for the glosses a fluent
 signer confirms are shared. Do not let 5 arriving first quietly turn the project
 into an ASL demo.
 
-Send all four the same day. They cost about twenty minutes together and run in
-parallel; recording proceeds regardless of how they land.
+Request 4 still needs a recipient. Routes: the contact form at
+<https://ethsl.aau.edu.et/>, the AAU School of Information Science Facebook page,
+or an introduction from Million Meshesha, who co-authored the paper behind
+request 1.
+
+Request 4 is not admin. It is the one that asks a fluent signer to confirm the 30
+glosses are real EthSL rather than ASL borrowings — the check that decides whether
+the downloaded ASL clips are training data or decoration.
