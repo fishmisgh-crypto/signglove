@@ -98,15 +98,19 @@ def check_codec(size):
 def check_model_bundles():
     """Truncated .task files are the most common silent failure here."""
     from download_models import valid
+    # Only the holistic bundle is required; the others are optional fallbacks.
     ok_any = False
-    for name in ("holistic_landmarker.task", "hand_landmarker.task"):
+    for name, required in (("holistic_landmarker.task", True),
+                           ("hand_landmarker.task", False)):
         p = MODEL_DIR / name
+        level = FAIL if required else WARN
+        suffix = "" if required else " (optional fallback)"
         if not p.exists():
-            report(f"model {name}", FAIL, "missing — run download_models.py")
+            report(f"model {name}", level, f"missing — run download_models.py{suffix}")
         elif not valid(p):
-            report(f"model {name}", FAIL,
+            report(f"model {name}", level,
                    f"incomplete ({p.stat().st_size/1e6:.1f} MB) — re-run "
-                   "download_models.py, it will resume")
+                   f"download_models.py, it will resume{suffix}")
         else:
             report(f"model {name}", PASS, f"{p.stat().st_size/1e6:.1f} MB")
             ok_any = True
