@@ -151,6 +151,58 @@ correct EthSL. Note Million Meshesha (AAU) is also a co-author on request 1.
 
 ---
 
+## 5. WLASL preprocessed videos
+
+**Primary route:** the video request Google Form linked from the
+[WLASL README](https://github.com/dxli94/WLASL) — submit that first, it is the
+process the maintainers actually run and it carries the terms agreement.
+**Follow-up only:** Dongxu Li — `dongxu.li@anu.edu.au`, the address the README
+gives for urgent cases. Do not email before submitting the form.
+
+Why we need it rather than the downloader script: WLASL ships URLs, not video,
+and from our network 11 of the 13 hosts behind our 29 overlapping glosses are
+unreachable — YouTube times out, signingsavvy returns 403, and most dictionary
+sites do not respond at all. Only about 13% of the clips are fetchable here.
+The preprocessed set sidesteps all of it, and it resolves the licensing
+question too: those clips belong to third-party dictionary sites, which is
+exactly why WLASL cannot redistribute them itself.
+
+Send this only after the form, and only if you have had no reply for a week or
+so.
+
+> **Subject:** WLASL video request follow-up — [name], [institution]
+>
+> Dear Dr Li,
+>
+> I submitted the WLASL video request form on [date] under the name [name]
+> ([email]) and wanted to follow up briefly.
+>
+> I am a [year] student at [institution] working on an isolated-word sign
+> language recognition project. We are studying the overlap between ASL and
+> Ethiopian Sign Language, which shares some historical lexicon with ASL through
+> the deaf schools where EthSL developed, and WLASL is the reference corpus for
+> the ASL side.
+>
+> We tried the start_kit downloader first. From our network most of the source
+> hosts are unreachable — YouTube requests time out, signingsavvy returns 403,
+> and several dictionary sites do not respond — so we can retrieve only a small
+> fraction of the clips. We would be grateful for access to the preprocessed
+> videos.
+>
+> We need roughly 29 glosses rather than the full 2,000: everyday vocabulary
+> such as hello, water, help, doctor, hospital, mother, father. A subset would
+> be very welcome if that is easier to share than the whole corpus.
+>
+> We accept the terms of use, will cite the WACV 2020 paper, and will not
+> redistribute the data.
+>
+> Thank you for maintaining WLASL and for making it available.
+>
+> [name]
+> [institution], [email]
+
+---
+
 ## Tracking
 
 | # | Target | Sent | Reply | Outcome |
@@ -159,6 +211,12 @@ correct EthSL. Note Million Meshesha (AAU) is also a co-author on request 1.
 | 2 | Yehalem — CESL, 22 signers | | | |
 | 3 | Heliyon — 2,430 alphabet samples | | | |
 | 4 | AAU EthSL unit — dictionary + verification | | | |
+| 5 | WLASL form, then Li — preprocessed ASL clips | | | |
+
+Requests 1–4 are for **EthSL** data and are what make this an Ethiopian
+translator. Request 5 is for **ASL** data, useful only for the glosses a fluent
+signer confirms are shared. Do not let 5 arriving first quietly turn the project
+into an ASL demo.
 
 Send all four the same day. They cost about twenty minutes together and run in
 parallel; recording proceeds regardless of how they land.
