@@ -1,5 +1,10 @@
 """Turn recorded clips into fixed-length MediaPipe Holistic keypoint arrays.
 
+Uses the MediaPipe Tasks API (HolisticLandmarker). The legacy
+`mp.solutions.holistic` API used by most published EthSL work was removed in
+MediaPipe 0.10.3x and does not exist on Python 3.13 — run download_models.py
+once to fetch the .task bundle this needs.
+
 Walks the raw clip tree, skips anything already extracted, and writes one
 .npy of shape (FRAMES_PER_CLIP, FEATURE_DIM) per clip.
 
@@ -13,6 +18,7 @@ are usually framing or lighting problems and should be re-recorded.
 import argparse
 import csv
 import sys
+from pathlib import Path
 
 import cv2
 import numpy as np
@@ -25,19 +31,20 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 QUALITY_CSV = MANIFEST_DIR / "extraction_report.csv"
+MODEL_PATH = Path(__file__).resolve().parent / "models" / "holistic_landmarker.task"
 
 
 def frame_features(results):
     """Flatten one frame to pose(33x4) + left hand(21x3) + right hand(21x3)."""
     if results.pose_landmarks:
-        pose = np.array([[p.x, p.y, p.z, p.visibility]
-                         for p in results.pose_landmarks.landmark]).flatten()
+        pose = np.array([[p.x, p.y, p.z, getattr(p, "visibility", 0.0)]
+                         for p in results.pose_landmarks[0]]).flatten()
     else:
         pose = np.zeros(33 * 4)
 
     def hand(landmarks):
         if landmarks:
-            return np.array([[p.x, p.y, p.z] for p in landmarks.landmark]).flatten()
+            return np.array([[p.x, p.y, p.z] for p in landmarks[0]]).flatten()
         return np.zeros(21 * 3)
 
     return np.concatenate([pose, hand(results.left_hand_landmarks),
@@ -55,16 +62,20 @@ def resample(frames, n=FRAMES_PER_CLIP):
     return arr[idx]
 
 
-def extract_clip(holistic, video_path):
+def extract_clip(landmarker, video_path):
+    import mediapipe as mp
     cap = cv2.VideoCapture(str(video_path))
-    frames, hand_hits = [], 0
+    src_fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
+    frames, hand_hits, i = [], 0, 0
     while True:
         ok, frame = cap.read()
         if not ok:
             break
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        rgb.flags.writeable = False
-        results = holistic.process(rgb)
+        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb)
+        # VIDEO mode requires strictly increasing timestamps.
+        results = landmarker.detect_for_video(mp_image, int(i * 1000 / src_fps))
+        i += 1
         if results.left_hand_landmarks or results.right_hand_landmarks:
             hand_hits += 1
         frames.append(frame_features(results))
@@ -98,11 +109,15 @@ def main():
         raise SystemExit(f"no clips found under {RAW_DIR} — record some first")
 
     rows, done, skipped, failed = [], 0, 0, 0
-    with mp.solutions.holistic.Holistic(
-            model_complexity=1,
-            min_detection_confidence=0.5,
-            min_tracking_confidence=0.5,
-            refine_face_landmarks=False) as holistic:
+    options = vision.HolisticLandmarkerOptions(
+        base_options=mp_tasks.BaseOptions(model_asset_path=str(MODEL_PATH)),
+        running_mode=vision.RunningMode.VIDEO,
+        min_pose_detection_confidence=0.5,
+        min_pose_landmarks_confidence=0.5,
+        min_hand_landmarks_confidence=0.5,
+        output_segmentation_mask=False,
+    )
+    with vision.HolisticLandmarker.create_from_options(options) as landmarker:
 
         for clip in clips:
             gloss, signer = clip.parent.parent.name, clip.parent.name
@@ -111,7 +126,7 @@ def main():
                 skipped += 1
                 continue
 
-            seq, coverage, n_frames = extract_clip(holistic, clip)
+            seq, coverage, n_frames = extract_clip(landmarker, clip)
             if seq is None or seq.shape != (FRAMES_PER_CLIP, FEATURE_DIM):
                 print(f"FAIL  {clip.name}  ({gloss}/{signer}) unreadable")
                 failed += 1
