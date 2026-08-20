@@ -97,15 +97,16 @@ def check_codec(size):
 
 def check_model_bundles():
     """Truncated .task files are the most common silent failure here."""
-    import zipfile
+    from download_models import valid
     ok_any = False
     for name in ("holistic_landmarker.task", "hand_landmarker.task"):
         p = MODEL_DIR / name
         if not p.exists():
             report(f"model {name}", FAIL, "missing — run download_models.py")
-        elif not zipfile.is_zipfile(p):
+        elif not valid(p):
             report(f"model {name}", FAIL,
-                   f"truncated ({p.stat().st_size} bytes) — delete and re-download")
+                   f"incomplete ({p.stat().st_size/1e6:.1f} MB) — re-run "
+                   "download_models.py, it will resume")
         else:
             report(f"model {name}", PASS, f"{p.stat().st_size/1e6:.1f} MB")
             ok_any = True
@@ -114,9 +115,9 @@ def check_model_bundles():
 
 def check_extraction(clip_path):
     """Run the real Tasks API over a real video file and check the array shape."""
-    import zipfile
+    from download_models import valid
     holistic = MODEL_DIR / "holistic_landmarker.task"
-    if not (holistic.exists() and zipfile.is_zipfile(holistic)):
+    if not valid(holistic):
         report("landmark extraction", WARN,
                "skipped — holistic bundle not usable yet")
         return

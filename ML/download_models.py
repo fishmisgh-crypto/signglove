@@ -32,7 +32,22 @@ MODELS = {
 
 
 def valid(path: Path) -> bool:
-    return path.exists() and path.stat().st_size > 0 and zipfile.is_zipfile(path)
+    """True only if the bundle is a zip that actually holds its .tflite models.
+
+    Size and `is_zipfile` are both too weak: a truncated download can land on a
+    byte sequence that opens as a zip with zero entries, and `testzip()` then
+    returns clean because there is nothing to test. That file fails only later,
+    inside MediaPipe, as "No file with name: hand_landmarks_detector.tflite".
+    """
+    if not path.exists() or path.stat().st_size == 0:
+        return False
+    try:
+        with zipfile.ZipFile(path) as z:
+            names = z.namelist()
+            return bool(names) and any(n.endswith(".tflite") for n in names) \
+                and z.testzip() is None
+    except (zipfile.BadZipFile, OSError):
+        return False
 
 
 def fetch(name: str, url: str, attempts: int) -> bool:
